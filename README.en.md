@@ -315,63 +315,6 @@ next block and duplicates at the boundaries are removed, so pans stay smooth.
 
 ---
 
-## Unstable GPU (TDR)
-
-If processing suddenly stops with `GPU is lost`, `CUDA_ERROR_INVALID_VALUE`,
-`no suitable device` or `Failed creating Vulkan device`, that is **TDR**: Windows decided the
-display driver hung and reset the device. The program is not at fault, but it writes a hint
-about this into the log.
-
-What to do, in order:
-
-1. **Reboot the PC.** After a TDR the card often does not come back without a reboot;
-   `nvidia-smi` reports `GPU is lost. Reboot the system to recover this GPU`.
-2. **Overclock/undervolt.** In MSI Afterburner press Reset, disable “Apply at Windows startup”,
-   reboot. Even a “factory” memory overclock on older cards can cause TDRs.
-3. **Cap clocks and power** (administrator rights required):
-
-   ```bat
-   nvidia-smi -lgc 1400,1500
-   nvidia-smi -pl 130
-   ```
-
-   If TDRs disappear, the PSU or the card VRM is to blame (dips/ripple under load), not the GPU.
-4. **Test the GPU memory**: `memtest_vulkan` (20–30 minutes). Errors mean GDDR6 degradation,
-   which only a service centre can fix.
-5. **Clean driver reinstall** with DDU in safe mode, then a fresh Studio driver (not Game Ready).
-6. **Background GPU hooks**: Riot Vanguard, Wallpaper Engine, Discord/Steam overlays,
-   MSI Afterburner — disable them while processing.
-7. **Hardware**: two separate 8-pin cables (no daisy chain), clean the heatsink, replace
-   thermal pads if the card is older than 5 years.
-
-While the card is unstable, use the **Anime4K S** or **Turbo** engine for long jobs: they put
-less and steadier load on the GPU than AI mode with RIFE.
-
-### A confirmed case: silicon degradation
-
-On the test RTX 2080 Ti, long runs (18–25 minutes) consistently failed with TDR at the
-~1900 MHz boost clock while drawing 117–142 W. A power limit did not help, and the memory
-passed `memtest_vulkan` without errors. The fix was to **lock the core clock into a flat
-range** where the card is stable:
-
-```bat
-nvidia-smi -lgc 1600,1700
-```
-
-After that a 1080p → 4K episode (Anime4K) ran for 25 minutes without a single failure:
-1695 MHz in 99.6 % of samples, 56.8 °C peak, the output file intact. No power limit is needed —
-under the lock the card draws about 117 W.
-
-To apply the lock automatically at sign-in, create a scheduled task (as administrator):
-
-```bat
-schtasks /create /tn "UPizy GPU Clock Lock" /tr "nvidia-smi -lgc 1600,1700" /sc onlogon /rl highest /f
-```
-
-Remove the lock: `nvidia-smi -rgc`.
-
----
-
 ## Limitations (honestly)
 
 - **VFR** (variable frame rate) is converted to constant — unnoticeable for screen recordings
@@ -387,8 +330,8 @@ Remove the lock: `nvidia-smi -rgc`.
   use the regular GPU path with tone-mapping. Without NVENC or the `scale_cuda` filter the mode
   falls back to libplacebo and says so in the log.
 - **Anime4K** requires the `libplacebo` filter and a working Vulkan GPU; otherwise the engine
-  falls back to plain libplacebo (a line in the log tells you). Output is 8/10 bit; on very weak
-  GPUs the driver may reset by timeout (TDR), so `S` is the safer choice for old cards.
+  falls back to plain libplacebo (a line in the log tells you). Output is 8/10 bit; on weaker
+  GPUs `S` is the better choice for long jobs.
 
 ---
 
