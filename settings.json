@@ -1,0 +1,22 @@
+{
+  "target": "4K",
+  "custom_w": 2560,
+  "custom_h": 1440,
+  "engine": "ai",
+  "ai_model": "auto",
+  "a4k_size": "M",
+  "quality": "high",
+  "encoder": "auto",
+  "container": "mkv",
+  "interp": 1,
+  "interp_model": "auto",
+  "sharpen": 0.25,
+  "denoise": false,
+  "hdr_policy": "tonemap",
+  "tile": 0,
+  "chunk": 0,
+  "output_dir": "",
+  "overwrite": false,
+  "keep_work": false,
+  "lang": "ru"
+}

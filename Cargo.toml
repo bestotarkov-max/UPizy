@@ -1,0 +1,33 @@
+[package]
+name = "upizy"
+version = "1.1.0"
+edition = "2021"
+description = "UPizy — GPU video upscaler (2K/4K) with AI, Anime4K, libplacebo and RIFE frame interpolation"
+authors = ["UPizy contributors"]
+license = "MIT"
+readme = "README.md"
+
+[lib]
+name = "upscaler"
+path = "src/lib.rs"
+
+[[bin]]
+name = "upizy"
+path = "src/main.rs"
+
+[[bin]]
+name = "upizy-cli"
+path = "src/bin/cli.rs"
+
+[dependencies]
+anyhow = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rfd = { version = "0.18", default-features = false }
+eframe = { version = "0.31", default-features = false, features = ["default_fonts", "glow"] }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+strip = true
+codegen-units = 1
