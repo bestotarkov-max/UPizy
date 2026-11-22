@@ -14,4 +14,4 @@ Native Windows tool written in Rust — a single `.exe`, no Python, no Visual St
 | Turbo · CUDA | Minutes instead of hours |
 
 The interface is available in Russian and English (`RU` / `EN` in the window header).
-License: MIT — see [LICENSE](LICENSE).
+License:  — see [LICENSE](LICENSE).
